@@ -1,4 +1,6 @@
 
+# This code require data.table ggplot2 and possibly ggpubr
+
 
 # This function creates the huge plot of the CNV frequencies in chrs 1:22 as
 # in the Genome wide CNV draft in the thesis. Positive values for DELs and negative
