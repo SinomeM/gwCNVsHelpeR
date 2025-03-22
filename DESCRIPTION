@@ -1,11 +1,12 @@
 Package: gwCNVsHelpeR
-Title: What the Package Does (One Line, Title Case)
+Title: Helper package for Genome-Wide CNV analysis
 Version: 0.0.0.9000
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"))
-Description: What the package does (one paragraph).
-License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
-    license
+    person("Simone", "Montalbano", , "first.last@example.com", role = c("aut", "cre"))
+Description: This package contains a set of function to perform
+  different analysis on a set of Genome-Wide CNVs. It is meant as a companion
+  package for CNValidatron it is not a strict requirement.
+License: `use_gpl3_license()`
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
