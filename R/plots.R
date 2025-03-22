@@ -1,6 +1,27 @@
 
-# This code require data.table ggplot2 and possibly ggpubr
-
+#' Genomic distribution of CNVs
+#'
+#' Plot the genomic distribution of deletion and duplication
+#' genome-wide (chromosomes 1 to 22). The y axes is the rescaled
+#' log frequency.
+#'
+#' @param cnvs CNVs table
+#'
+#' @param chr_st_en As usual
+#'
+#' @param n_samples For the frequency calculation
+#'
+#' @param bin_size Size of the unit
+#'
+#' @param return_pl_list return all chromosomes individually
+#'   instead of four rows
+#'
+#' @export
+#'
+#' @import data.table
+#' @import ggplot2
+#' @import ggpubr
+#' @import patchwork
 
 # This function creates the huge plot of the CNV frequencies in chrs 1:22 as
 # in the Genome wide CNV draft in the thesis. Positive values for DELs and negative
@@ -84,6 +105,28 @@ cnvs_distr_big <- function(cnvs, chr_st_en, n_samples, bin_size = 250000, return
   # return list of the four rows
   return(list(row1, row2, row3, row4))
 }
+
+#' Genomic distribution of CNVs (T/F)
+#'
+#' Plot the genomic distribution of deletion and duplication
+#' genome-wide (chromosomes 1 to 22). The y axes is the rescaled
+#' log frequency.
+#'
+#' @param cnvs CNVs table
+#'
+#' @param chr_st_en As usual
+#'
+#'
+#' @param bin_size Size of the unit
+#'
+#' @param gt 1 for deletions, 2 fro duplications
+#'
+#' @export
+#'
+#' @import data.table
+#' @import ggplot2
+#' @import ggpubr
+#' @import patchwork
 
 # Same as previous but need to be run twice (DELs and DUPs),
 # this version is intended to show differences between validated
