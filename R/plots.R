@@ -161,7 +161,7 @@ cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
                 c(190, 180, 170, 160),
                 c(147, 142, 137, 137, 137),
                 c(98, 88, 78, 88, 83, 78, 58, 63, 33, 33))
-  ylims <- bins[, log(c(max(N), min(N)))]
+  ylims <- bins[, c(log(max(N)), log(-min(N)))]
 
   pl_list <- list()
   for (i in 1:22) {
