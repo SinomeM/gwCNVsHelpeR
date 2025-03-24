@@ -143,8 +143,8 @@ cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
   bins <- rbind(a, b)
   
   # log scale
-  bins[N > 0, logN := log(N)]
-  bins[N < 0, logN := -log(-N)]
+  bins[N > 0, logN := log(N, 10)]
+  bins[N < 0, logN := -log(-N, 10)]
   bins[N == 0, logN := 0]
   
   bins[, centre := round(start + (end - start + 1)/2)]
