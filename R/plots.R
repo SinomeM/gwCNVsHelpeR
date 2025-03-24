@@ -172,7 +172,7 @@ cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
   pl_list <- list()
   for (i in 1:22) {
     pl <- ggplot(bins[chr == i, ]) +
-      geom_bar(aes(x = centre/1000000, y = log(N), fill = Visual_Validation),
+      geom_bar(aes(x = centre/1000000, y = logN, fill = Visual_Validation),
                stat = 'identity', show.legend = F) +
       geom_vline(xintercept = chr_boundaries[chr == i, centromere/1000000],
                  linetype = "dashed", color = "black") + theme_bw() +
