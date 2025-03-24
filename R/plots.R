@@ -141,6 +141,12 @@ cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
   a[, Visual_Validation := 'True']
   b[, ':=' (Visual_Validation = 'False', N = -N)]
   bins <- rbind(a, b)
+  
+  # log scale
+  bins[N > 0, logN := log(N)]
+  bins[N < 0, logN := -log(-N)]
+  bins[N == 0, logN := 0]
+  
   bins[, centre := round(start + (end - start + 1)/2)]
   bins[GT == 1, CNV := 'Deletions'][GT == 2, CNV := 'Duplications']
 
@@ -161,7 +167,7 @@ cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
                 c(190, 180, 170, 160),
                 c(147, 142, 137, 137, 137),
                 c(98, 88, 78, 88, 83, 78, 58, 63, 33, 33))
-  ylims <- bins[, c(log(max(N)), log(-min(N)))]
+  ylims <- bins[, c(max(logN)), min(logN))]
 
   pl_list <- list()
   for (i in 1:22) {
