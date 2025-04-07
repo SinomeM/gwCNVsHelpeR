@@ -2,6 +2,7 @@
 
 export(cnvs_distr_big)
 export(cnvs_distr_big_TF)
+export(compare_cnv_sets)
 export(process_quick_res)
 export(quick_assoc)
 export(run_assoc_logistic)
