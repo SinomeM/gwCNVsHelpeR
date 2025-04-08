@@ -4,12 +4,14 @@
 \alias{compare_cnv_sets}
 \title{Compare two CNV sets}
 \usage{
-compare_cnv_sets(cnvsA, cnvsB)
+compare_cnv_sets(cnvsA, cnvsB, gt_cn = "CN")
 }
 \arguments{
 \item{cnvsA}{CNVs table}
 
 \item{cnvsB}{CNVs table}
+
+\item{gt_cn}{choose to check the exct CN or just the GT}
 }
 \description{
 Return all pairs of overlapping segments for a given sample with the same (exact
