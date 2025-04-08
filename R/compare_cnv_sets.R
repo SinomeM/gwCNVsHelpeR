@@ -6,6 +6,7 @@
 #'
 #' @param cnvsA CNVs table
 #' @param cnvsB CNVs table
+#' @param gt_cn choose to check the exct CN or just the GT
 #'
 #' @export
 #'
@@ -13,7 +14,7 @@
 
 # compare two CNV sets, return all pairs of overlapping segments for each sample
 # whit the same (exact) CN
-compare_cnv_sets <- function(cnvsA, cnvsB) {
+compare_cnv_sets <- function(cnvsA, cnvsB, gt_cn = 'CN') {
   a <- copy(cnvsA[, .(sample_ID, chr, start, end, CN)])
   b <- copy(cnvsB[, .(sample_ID, chr, start, end, CN)])
   
