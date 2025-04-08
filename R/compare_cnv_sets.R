@@ -15,8 +15,14 @@
 # compare two CNV sets, return all pairs of overlapping segments for each sample
 # whit the same (exact) CN
 compare_cnv_sets <- function(cnvsA, cnvsB, gt_cn = 'CN') {
-  a <- copy(cnvsA[, .(sample_ID, chr, start, end, CN)])
-  b <- copy(cnvsB[, .(sample_ID, chr, start, end, CN)])
+  if (gt_cn == 'CN') {
+    a <- copy(cnvsA[, .(sample_ID, chr, start, end, CN)])
+    b <- copy(cnvsB[, .(sample_ID, chr, start, end, CN)])
+  }
+  if (gt_cn == 'GT') {
+    a <- copy(cnvsA[, .(sample_ID, chr, start, end, CN, GT)])
+    b <- copy(cnvsB[, .(sample_ID, chr, start, end, CN, GT)])
+  }
   
   dt <- data.table()
   for (s in unique(c(cnvsA$sample_ID, cnvsB$sample_ID))) {
@@ -24,7 +30,8 @@ compare_cnv_sets <- function(cnvsA, cnvsB, gt_cn = 'CN') {
     bb <- b[sample_ID == s, ]
     if (aa[, .N] == 0 | bb[, .N] == 0) next
     setkey(bb, start, end)
-    tmp <- foverlaps(aa, bb)[CN == i.CN]
+    if (gt_cn == 'CN') tmp <- foverlaps(aa, bb)[CN == i.CN]
+    if (gt_cn == 'GT') tmp <- foverlaps(aa, bb)[GT == i.GT]
     tmp[, ':=' (i.sample_ID = NULL, i.CN = NULL, i.chr = NULL)]
     dt <- rbind(dt, tmp)
   }
