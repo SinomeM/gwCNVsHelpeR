@@ -20,8 +20,8 @@ compare_cnv_sets <- function(cnvsA, cnvsB, gt_cn = 'CN') {
     b <- copy(cnvsB[, .(sample_ID, chr, start, end, CN)])
   }
   if (gt_cn == 'GT') {
-    a <- copy(cnvsA[, .(sample_ID, chr, start, end, CN, GT)])
-    b <- copy(cnvsB[, .(sample_ID, chr, start, end, CN, GT)])
+    a <- copy(cnvsA[, .(sample_ID, chr, start, end, GT)])
+    b <- copy(cnvsB[, .(sample_ID, chr, start, end, GT)])
   }
   
   dt <- data.table()
@@ -30,12 +30,20 @@ compare_cnv_sets <- function(cnvsA, cnvsB, gt_cn = 'CN') {
     bb <- b[sample_ID == s, ]
     if (aa[, .N] == 0 | bb[, .N] == 0) next
     setkey(bb, start, end)
-    if (gt_cn == 'CN') tmp <- foverlaps(aa, bb)[CN == i.CN]
-    if (gt_cn == 'GT') tmp <- foverlaps(aa, bb)[GT == i.GT]
-    tmp[, ':=' (i.sample_ID = NULL, i.CN = NULL, i.chr = NULL)]
+    if (gt_cn == 'CN') {
+      tmp <- foverlaps(aa, bb)[CN == i.CN]
+      tmp[, ':=' (i.sample_ID = NULL, i.CN = NULL, i.chr = NULL)]
+    }
+    if (gt_cn == 'GT') {
+      tmp <- foverlaps(aa, bb)[GT == i.GT]
+      tmp[, ':=' (i.sample_ID = NULL, i.GT = NULL, i.chr = NULL)]
+    }
     dt <- rbind(dt, tmp)
   }
-  colnames(dt) <- c('sample_ID', 'chr', 'startB', 'endB', 'CN', 'startA', 'endA')
+  if (gt_cn == 'CN')
+    colnames(dt) <- c('sample_ID', 'chr', 'startB', 'endB', 'CN', 'startA', 'endA')
+  if (gt_cn == 'GT')
+    colnames(dt) <- c('sample_ID', 'chr', 'startB', 'endB', 'GT', 'startA', 'endA')
   dt[, iou := (pmin(endA, endB) - pmax(startA, startB)) /
        (pmax(endA, endB) - pmin(startA, startB))]
   return(dt)
