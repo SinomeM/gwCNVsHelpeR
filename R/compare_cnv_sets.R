@@ -31,11 +31,11 @@ compare_cnv_sets <- function(cnvsA, cnvsB, gt_cn = 'CN') {
     if (aa[, .N] == 0 | bb[, .N] == 0) next
     setkey(bb, start, end)
     if (gt_cn == 'CN') {
-      tmp <- foverlaps(aa, bb)[CN == i.CN]
+      tmp <- foverlaps(aa, bb)[CN == i.CN & chr == i.chr, ]
       tmp[, ':=' (i.sample_ID = NULL, i.CN = NULL, i.chr = NULL)]
     }
     if (gt_cn == 'GT') {
-      tmp <- foverlaps(aa, bb)[GT == i.GT]
+      tmp <- foverlaps(aa, bb)[GT == i.GT & chr == i.chr, ]
       tmp[, ':=' (i.sample_ID = NULL, i.GT = NULL, i.chr = NULL)]
     }
     dt <- rbind(dt, tmp)
