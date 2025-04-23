@@ -118,3 +118,23 @@ get_metrics_per_prob2 <- function(dt, unk = 3) {
   }
   return(out)
 }
+
+# metrics plot 
+
+plot_performance <- function(dt) {
+  a <- dt[, .(minprob, precision)]
+  colnames(a) <- c('minprob', 'performance')
+  b <- dt[, .(minprob, recall)]
+  colnames(b) <- c('minprob', 'performance')
+  a[, Metric := 'Precision / PPV']
+  b[, Metric := 'Recall / Sensitivity']
+  dt <- rbind(a, b)
+  
+  ggplot(dt) +
+    geom_point(aes(x = minprob, y = performance, colour = Metric), size = 0.3) +
+    geom_line(aes(x = minprob, y = performance, colour = Metric), alpha = 0.75) +
+    scale_colour_manual(values = c('Precision / PPV' = '#0000CC', 'Recall / Sensitivity' = '#0066FF')) +
+    theme_bw() + xlim(0, 1) + ylab('Performance') + xlab('Prediction Probability Cutoff') + 
+    theme(legend.position = c(0.25, 0.15))
+  
+}
