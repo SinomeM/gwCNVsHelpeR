@@ -141,12 +141,12 @@ cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
   a[, Visual_Validation := 'True']
   b[, ':=' (Visual_Validation = 'False', N = -N)]
   bins <- rbind(a, b)
-  
+
   # log scale
   bins[N > 0, logN := log(N, 10)]
   bins[N < 0, logN := -log(-N, 10)]
   bins[N == 0, logN := 0]
-  
+
   bins[, centre := round(start + (end - start + 1)/2)]
   bins[GT == 1, CNV := 'Deletions'][GT == 2, CNV := 'Duplications']
 
@@ -201,3 +201,69 @@ cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
 }
 
 
+#' Prepare performance metrics table
+#'
+#' @param dt validated CNVs table
+#'
+#' @param unk treat unclear calls as unclear (3, excluded),
+#'   true (1), or false (2)
+#'
+#' @export
+#'
+#' @import data.table
+
+# prepare table for performance metrics plot
+
+get_metrics_per_prob2 <- function(dt, unk = 3) {
+  dt <- copy(dt)
+
+  # drop UNK if wanted
+  if (unk != 3) message('Unclear CNVs marked as: ', unk)
+  dt[vo == 3, vo := unk]
+  dt <- dt[vo %in% 1:2, ]
+
+  dt[GT == 1, prob := p_true_del]
+  dt[GT == 2, prob := p_true_dup]
+  dt[vo == 1, human := T]
+  dt[vo == 2, human := F]
+  out <- data.table()
+
+  for (i in seq(from = 0, to = 1, by = 0.01)) {
+    tp <- dt[prob >= i & human == T, .N]
+    tn <- dt[human == F & prob < i, .N]
+    fp <- dt[prob >= i & human == F, .N]
+    fn <- dt[human == T & prob < i, .N]
+    out <- rbind(out, data.table(minprob = i, tp = tp, tn = tn, fp = fp, fn = fn,
+                                 precision = signif(tp / (tp + fp), 4),
+                                 recall = signif(tp / (tp + fn), 4)))
+  }
+  return(out)
+}
+
+#' Performance metrics plot
+#'
+#' @param dt output of `get_metrics_per_prob2()`
+#'
+#'
+#' @export
+#'
+#' @import data.table
+#' @import ggplot2
+
+plot_performance <- function(dt) {
+  a <- dt[, .(minprob, precision)]
+  colnames(a) <- c('minprob', 'performance')
+  b <- dt[, .(minprob, recall)]
+  colnames(b) <- c('minprob', 'performance')
+  a[, Metric := 'Precision / PPV']
+  b[, Metric := 'Recall / Sensitivity']
+  dt <- rbind(a, b)
+
+  ggplot(dt) +
+    geom_point(aes(x = minprob, y = performance, colour = Metric), size = 0.3) +
+    geom_line(aes(x = minprob, y = performance, colour = Metric), alpha = 0.75) +
+    scale_colour_manual(values = c('Precision / PPV' = '#0000CC', 'Recall / Sensitivity' = '#0066FF')) +
+    theme_bw() + xlim(0, 1) + ylab('Performance') + xlab('Prediction Probability Cutoff') + 
+    theme(legend.position = c(0.25, 0.15))
+
+}

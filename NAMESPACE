@@ -3,6 +3,8 @@
 export(cnvs_distr_big)
 export(cnvs_distr_big_TF)
 export(compare_cnv_sets)
+export(get_metrics_per_prob2)
+export(plot_performance)
 export(process_quick_res)
 export(quick_assoc)
 export(run_assoc_logistic)
