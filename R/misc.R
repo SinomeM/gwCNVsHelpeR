@@ -89,3 +89,32 @@ process_bins_gc_table_genes <- function(dt) {
              N_dels_partial = NA, N_dups_partial = NA)]
   dt[between(N_all, 1, 4), ':=' (N_all = NA, median_all = NA)]
 }
+
+
+# prepare table for performance metrics plot
+
+get_metrics_per_prob2 <- function(dt, unk = 3) {  
+  dt <- copy(dt)
+  
+  # drop UNK if wanted
+  if (unk != 3) message('Unclear CNVs marked as: ', unk)
+  dt[vo == 3, vo := unk]  
+  dt <- dt[vo %in% 1:2, ]
+  
+  dt[GT == 1, prob := p_true_del]
+  dt[GT == 2, prob := p_true_dup]
+  dt[vo == 1, human := T]
+  dt[vo == 2, human := F]
+  out <- data.table()
+  
+  for (i in seq(from = 0, to = 1, by = 0.01)) {
+    tp <- dt[prob >= i & human == T, .N]
+    tn <- dt[human == F & prob < i, .N]
+    fp <- dt[prob >= i & human == F, .N]
+    fn <- dt[human == T & prob < i, .N]
+    out <- rbind(out, data.table(minprob = i, tp = tp, tn = tn, fp = fp, fn = fn,
+                                 precision = signif(tp / (tp + fp), 4),
+                                 recall = signif(tp / (tp + fn), 4)))
+  }
+  return(out)
+}
