@@ -222,8 +222,10 @@ get_metrics_per_prob2 <- function(dt, unk = 3) {
   dt[vo == 3, vo := unk]
   dt <- dt[vo %in% 1:2, ]
 
-  dt[GT == 1, prob := p_true_del]
-  dt[GT == 2, prob := p_true_dup]
+  if (!'prob' %in% colnames(dt)) {
+    dt[GT == 1, prob := p_true_del]
+    dt[GT == 2, prob := p_true_dup]
+  }
   dt[vo == 1, human := T]
   dt[vo == 2, human := F]
   out <- data.table()
