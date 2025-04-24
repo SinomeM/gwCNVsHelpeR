@@ -127,6 +127,7 @@ cnvs_distr_big <- function(cnvs, chr_st_en, n_samples, bin_size = 250000, return
 #' @import ggplot2
 #' @import ggpubr
 #' @import patchwork
+#' @import CNValidatron
 
 # Same as previous but need to be run twice (DELs and DUPs),
 # this version is intended to show differences between validated
