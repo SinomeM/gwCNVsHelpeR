@@ -135,6 +135,9 @@ cnvs_distr_big <- function(cnvs, chr_st_en, n_samples, bin_size = 250000, return
 # Now the y axes scale in the absolute N value but I might move it to log
 cnvs_distr_big_TF <- function(cnvs, chr_st_en, bin_size = 250000, gt) {
 
+  colours <- c(Deletions = '#E69F00', Duplications = '#56B4E9',
+               True = '#009E73', False = '#D55E00', Unknown = '#F0E442')
+
   a <- binned_cnvs(cnvs[GT == gt & Visual_Validation == 'True', ], format = 'count',
                    CNValidatron:::binned_genome(chr_st_en, bin_size))[[2]]
   b <- binned_cnvs(cnvs[GT == gt & Visual_Validation == 'False', ], format = 'count',
