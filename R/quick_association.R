@@ -110,7 +110,7 @@ process_quick_res <- function(quick_res, markers, padj = F, max_pval = 0.1,
 #' @export
 
 run_assoc_logistic <- function(markers, scan_res, pheno, padj = F,
-                               max_pval = 0.1, min_carriers = 5) {
+                               max_pval = 0.1, min_carriers = 5, cohort_adj = F) {
 
   # re unique to be always sure
   markers <- unique(markers)
@@ -152,7 +152,10 @@ run_assoc_logistic <- function(markers, scan_res, pheno, padj = F,
     # more than 5 but the DUP not. In GDK is done differently
 
     # run association
-    mod <- gam(pheno ~ var + s(age) + gender, data = tmp, family = binomial)
+    if (cohort_adj)
+      mod <- gam(pheno ~ var + s(age) + gender + cohort, data = tmp, family = binomial)
+    else
+      mod <- gam(pheno ~ var + s(age) + gender, data = tmp, family = binomial)
 
     # format results
     pt <- summary(mod)$p.table
