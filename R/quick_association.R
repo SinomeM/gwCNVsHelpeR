@@ -94,7 +94,7 @@ process_quick_res <- function(quick_res, markers, padj = F, max_pval = 0.1,
 
   dt <- merge(quick_res, unique(markers[, .(marker_ID, chr, start, end)]),
               by = 'marker_ID')
-  res <- CNValidatron:::exclude_fixed_loci(dt, loci, 250000)
+  res <- exclude_fixed_loci(dt, loci, 250000)
 }
 
 
