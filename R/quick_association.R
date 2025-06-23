@@ -140,7 +140,10 @@ run_assoc_logistic <- function(markers, scan_res, pheno, padj = F,
     if (n_del < min_carriers & n_dup < min_carriers) next
 
     # pheno file for the marker
-    tmp <- pheno[, .(sample_ID, pheno, age, gender)]
+    if (cohort_adj)
+      tmp <- pheno[, .(sample_ID, pheno, age, gender, cohort)]
+    else
+      tmp <- pheno[, .(sample_ID, pheno, age, gender)]
     if (n_del >= min_carriers)
       tmp[sample_ID %in% dtm[GT == 1, sample_ID], var := 1]
     if (n_dup >= min_carriers)
