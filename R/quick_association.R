@@ -20,6 +20,8 @@ quick_assoc <- function(markers, pheno, test = 'fisher') {
   # NB, GT is 0 for normal, 1 for deletions, and 2 for duplications
   # NB, pheno is 1 for cases and 0 for controls
 
+  markers <- markers[sample_ID %in% pheno$sample_ID, ]
+
   # minimal table to work with
   dt <- merge(markers[, .(sample_ID, marker_ID, GT, chr)],
               pheno[, .(sample_ID, pheno)], by = 'sample_ID', all.x = T)
@@ -116,6 +118,8 @@ run_assoc_logistic <- function(markers, scan_res, pheno, padj = F,
   markers <- unique(markers)
   scan_res <- unique(scan_res)
   pheno <- unique(pheno)
+
+  markers <- markers[sample_ID %in% pheno$sample_ID, ]
 
   # select markers
   if (padj)
