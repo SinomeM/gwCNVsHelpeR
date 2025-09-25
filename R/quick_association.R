@@ -67,7 +67,7 @@ exclude_fixed_loci <- function(assoc_res, loci, boundary = 200000) {
   dt_f <- data.table()
   for (i in 1:loci[,.N]) {
     loc <- loci[i]
-    dt_f <- rbind(dt_f, assoc_res[chr == loc$chr & start <= loc$end & end >= loc$start, ])
+    dt_f <- rbind(dt_f, assoc_res[chr == loc$chr & start <= loc$end+boundary & end >= loc$start-boundary, ])
   }
   dt_no_f <- fsetdiff(assoc_res, dt_f)
   return(list(in_loci = dt_f, not_in_loci = dt_no_f))
